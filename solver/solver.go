@@ -2,6 +2,7 @@ package solver
 
 import (
 	"push_swap/stack"
+	"sort"
 )
 
 func TrierPile() []string {
@@ -100,6 +101,58 @@ func trierPetitePile() []string {
 
 func trierGrandePile() []string {
 	var givenArgs []string
-	// Logique pour 100 / 500 nombres
+
+	if stack.EstRangee() {
+		return givenArgs
+	}
+
+	n := len(stack.A)
+
+	// Étape 1 : Normalisation des valeurs de stack.A en rangs (de 0 à n-1)
+	// On crée une copie triée pour identifier la position (le rang) de chaque nombre
+	copie := make([]int, n)
+	copy(copie, stack.A)
+	sort.Ints(copie)
+
+	// On remplace temporairement les éléments de stack.A par leurs rangs
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if stack.A[i] == copie[j] {
+				stack.A[i] = j
+				break
+			}
+		}
+	}
+
+	// Étape 2 : Calculer le nombre de bits nécessaires pour représenter le plus grand index (n - 1)
+	maxVal := n - 1
+	maxBits := 0
+	for (maxVal >> maxBits) != 0 {
+		maxBits++
+	}
+
+	// Étape 3 : Boucle principale du Radix sur chaque bit
+	for bit := 0; bit < maxBits; bit++ {
+		size := len(stack.A)
+		for i := 0; i < size; i++ {
+			// On regarde le bit actuel du nombre au sommet de la pile A
+			if ((stack.A[0] >> bit) & 1) == 0 {
+				// Si le bit vaut 0, on pousse vers B
+				stack.Pb()
+				givenArgs = append(givenArgs, "pb")
+			} else {
+				// Si le bit vaut 1, on fait une rotation sur A
+				stack.Ra()
+				givenArgs = append(givenArgs, "ra")
+			}
+		}
+
+		// On vide la pile B en ramenant tout dans A
+		for len(stack.B) > 0 {
+			stack.Pa()
+			givenArgs = append(givenArgs, "pa")
+		}
+	}
+
 	return givenArgs
 }
