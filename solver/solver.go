@@ -108,13 +108,12 @@ func trierGrandePile() []string {
 
 	n := len(stack.A)
 
-	// Étape 1 : Normalisation des valeurs de stack.A en rangs (de 0 à n-1)
-	// On crée une copie triée pour identifier la position (le rang) de chaque nombre
+	// On crée une copie triée pour identifier la position de chaque nombre
 	copie := make([]int, n)
 	copy(copie, stack.A)
 	sort.Ints(copie)
 
-	// On remplace temporairement les éléments de stack.A par leurs rangs
+	// On remplace temporairement les éléments de stack.A par leurs positions
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
 			if stack.A[i] == copie[j] {
@@ -124,14 +123,14 @@ func trierGrandePile() []string {
 		}
 	}
 
-	// Étape 2 : Calculer le nombre de bits nécessaires pour représenter le plus grand index (n - 1)
+	// Calculer le nombre de bits nécessaires pour représenter le + grand index 
 	maxVal := n - 1
 	maxBits := 0
 	for (maxVal >> maxBits) != 0 {
 		maxBits++
 	}
 
-	// Étape 3 : Boucle principale du Radix sur chaque bit
+	// Boucle principale du Radix sur chaque bit
 	for bit := 0; bit < maxBits; bit++ {
 		size := len(stack.A)
 		for i := 0; i < size; i++ {

@@ -16,6 +16,7 @@ func main() {
 	if len(UserArgs) == 0 {
 		return
 	}
+
 	var args []string
 	doublon := make(map[int]bool)
 
@@ -26,9 +27,9 @@ func main() {
 	}
 
 	for _, arg := range args {
-		nombre, err := strconv.Atoi(arg)
+		nombre, err := strconv.Atoi(arg) // Ascii to integer conversion
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error")
+			fmt.Fprintln(os.Stderr, "Error") // standar error detection
 			os.Exit(1)
 		}
 
@@ -79,9 +80,13 @@ func main() {
 	}
 
 	// Gestion d'une erreur éventuelle du scanner
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "Error")
-		os.Exit(1)
+	// On récupère l'erreur dans une variable
+	err := scanner.Err()
+	
+	// On vérifie si cette variable n'est pas vide
+	if err != nil {
+    	fmt.Fprintln(os.Stderr, "Error")
+    	os.Exit(1)
 	}
 
 	if stack.EstRangee() && len(stack.B) == 0 {
